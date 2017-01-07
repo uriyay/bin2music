@@ -16,11 +16,11 @@ class Binary2Music(object):
     def load_music(self, music_path, chunk_size=CHUNK_SIZE):
         wave_file = wave.open(music_path)
         wave_frames = wave_file.readframes(wave_file.getnframes())
-        self.frames = [wave_frames[x:x+chunk_size] for x in xrange(0, wave_file.getnframes(), chunk_size)]
+        self.chunks = [wave_frames[x:x+chunk_size] for x in xrange(0, wave_file.getnframes(), chunk_size)]
         if self.should_shuffle:
-            random.shuffle(self.frames)
+            random.shuffle(self.chunks)
         #now choose only 255 of them
-        self.frames = self.frames[:256]
+        self.chunks = self.chunks[:256]
 
     def shape_number(self, num, start, stop):
         '''
@@ -36,8 +36,8 @@ class Binary2Music(object):
         # return binary
         frames = ''
         for b in binary:
-            index = self.shape_number(ord(b), 0, len(self.frames))
-            frames += self.frames[index]
+            index = self.shape_number(ord(b), 0, len(self.chunks))
+            frames += self.chunks[index]
         return frames
 
     def play_binary(self, binary, timeout=None):
